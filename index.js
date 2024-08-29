@@ -1,5 +1,5 @@
 const fs = require('fs');
-const axios = require('axios');
+const fedi_wk = require('fedi-well-known');
 
 function readDomainsFromFile(filePath) {
     try {
@@ -11,23 +11,13 @@ function readDomainsFromFile(filePath) {
     }
 }
 
-async function fetchNodeInfo(domain) {
-    try {
-        const url = `https://${domain}/.well-known/nodeinfo`;
-        const response = await axios.get(url);
-        return response.data;
-    } catch (err) {
-        console.error(`Error fetching nodeinfo from ${domain}:`, err.message);
-        return null;
-    }
-}
 
 async function loadNodeInfo(filePath) {
     const domains = readDomainsFromFile(filePath);
     const selectedDomains = domains.slice(0, 6);
 
     for (const domain of selectedDomains) {
-        const nodeInfo = await fetchNodeInfo(domain);
+        const nodeInfo = await fedi_wk.fetchNodeInfo(domain);
         if (nodeInfo) {
             console.log(`Node info for ${domain}:`, nodeInfo);
         }
