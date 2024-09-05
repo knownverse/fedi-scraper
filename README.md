@@ -1,5 +1,11 @@
 ## Fediverse Scraper
 
-Run to scrape nodeinfos: ```npm start https://nodes.fediverse.party/nodes.json```
+Run to scrape: 
 
-Or use local file with array of servers: ```npm start fedi-nodes.json ```
+```
+npm start -- --src <url/path> --firstN <number> 
+npm start -- --src https://nodes.fediverse.party/nodes.json --firstN 10
+npm start -- --src ./fedi-nodes.json
+```
+
+Scraper will fetch nodeinfos into local ./.fedi-nodes folder 

@@ -2,6 +2,26 @@ const fs = require('fs');
 const fedi_wk = require('fedi-well-known');
 const fs_storage = require('./fs-storage');
 const ProgressBar = require('progress');
+const yargs = require('yargs');
+
+const argv = yargs
+  .option('src', {
+    alias: 's',
+    description: 'The URI to fetch data from',
+    type: 'string',
+    demandOption: true,
+  })
+  .option('firstN', {
+    alias: 'n',
+    description: 'The amount of domains to fetch',
+    type: 'number',
+    demandOption: false,
+  })
+  .help()
+  .alias('help', 'h')
+  .argv;
+
+const { src, firstN } = argv;
 
 function readDomainsFromFile(filePath) {
     try {
@@ -17,16 +37,15 @@ async function readFromUrl(url){
     let response = await fetch(url);
     if (!response.ok) {
         console.error('Error reading file with nodes list:', response.status);
-        // return WellKnowResult.Error(`HTTP error! status: ${url}: ${response.status}`);
         return [];
     }
     const data = await response.json();
     return data;
 }
 
-async function loadNodeInfo(path) {
+async function loadNodeInfo(path, firstN) {
     const domains = path.startsWith('http') ? await readFromUrl(path) : readDomainsFromFile(path);
-    const selectedDomains = domains.slice(0, 10);
+    const selectedDomains = firstN ? domains.slice(0, firstN) : domains;
 
     let totalNodes = selectedDomains.length;
     let counterCompleted = 0, counterFailed = 0;
@@ -53,6 +72,4 @@ async function loadNodeInfo(path) {
     console.log('Scraping finished. Completing storing...');
 }
 
-const [,, nodesListPathOrUrl] = process.argv;
-
-loadNodeInfo(nodesListPathOrUrl);
+loadNodeInfo(src, firstN);
