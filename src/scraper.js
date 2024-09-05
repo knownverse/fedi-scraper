@@ -1,31 +1,26 @@
-const ProgressBar = require('progress');
-const fs_storage = require('./fs-storage');
 const fedi_wk = require('fedi-well-known');
 const assert = require('assert');
 
-async function fetchNodeInfos(domains) {
-    assert.ok(Array.isArray(domains));
-    let counterCompleted = 0, counterFailed = 0;
-    const bar = new ProgressBar('scraping [:bar] success: [:success] fail: [:fail] :percent :etas', { total: domains.length });
-
+async function* fetchNodeInfos(domains) {
+    assert.ok(Array.isArray(domains), 'domains must be an array');
     console.log(`Scraping nodeinfo from ${domains.length} domains`);
-
-    for (const domain of domains) {
-        const nodeInfo = await fedi_wk.fetchNodeInfo(domain);
-        if (nodeInfo.success)
-            counterCompleted++;
-        else {
-            console.error(`\n${domain}: ${nodeInfo.error}`);
-            counterFailed++;
+    
+    const tasks =  domains.map(async (domain) => {
+        try {
+            const nodeInfo = await fedi_wk.fetchNodeInfo(domain);
+            return { domain, nodeInfo };
         }
-        fs_storage.storeUsageData(domain, nodeInfo);
-        bar.tick({
-            current: counterCompleted + counterFailed,
-            success: counterCompleted,
-            fail: counterFailed,
-        });
+        catch (err) {
+            return { domain, nodeInfo: fedi_wk.WellKnowResult.Error(err) };
+
+        }
+    });
+
+    for await (const result of tasks) {
+        yield result;
     }
-    console.log('Scraping finished. Completing storing...');
+
+    console.log('Scraping finished');
 }
 
 module.exports = {fetchNodeInfos}
