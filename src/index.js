@@ -10,7 +10,7 @@ async function main(){
     const domains = await utils.getDomainsList(src, firstN);
 
     let counterCompleted = 0, counterFailed = 0;
-    const bar = new ProgressBar('scraping [:bar] success: [:success] fail: [:fail] :percent :etas', { total: domains.length });
+    const bar = new ProgressBar('scraping [:bar] success: [:success] fail: [:fail] :percent :etas', { total: domains.length, stream: process.stdout });
 
     for await (const {domain, nodeInfo} of scraper.fetchNodeInfos(domains)) {
         if (nodeInfo.success)
