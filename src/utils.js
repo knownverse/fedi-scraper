@@ -15,6 +15,12 @@ return yargs
     type: 'number',
     demandOption: false,
   })
+  .option('concurrencyLimit', {
+    alias: 'c',
+    description: '# of parallel fetches',
+    type: 'number',
+    demandOption: false,
+  })
   .help()
   .alias('help', 'h')
   .argv;

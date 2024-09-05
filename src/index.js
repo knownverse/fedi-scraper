@@ -6,20 +6,22 @@ const ProgressBar = require('progress');
 main();
 
 async function main(){
-    const { src, firstN } = utils.getArgs();
+    const { src, firstN, concurrencyLimit} = utils.getArgs();
     const domains = await utils.getDomainsList(src, firstN);
 
     let counterCompleted = 0, counterFailed = 0;
     const bar = new ProgressBar('scraping [:bar] success: [:success] fail: [:fail] :percent :etas', { total: domains.length, stream: process.stdout });
 
-    for await (const {domain, nodeInfo} of scraper.fetchNodeInfos(domains)) {
+    for await (const {domain, nodeInfo} of scraper.fetchNodeInfos(domains, concurrencyLimit)) {
         if (nodeInfo.success)
+        {
             counterCompleted++;
+            fs_storage.storeUsageData(domain, nodeInfo);
+        }
         else {
             console.error(`\n${domain}: ${nodeInfo.error}`);
             counterFailed++;
         }
-        fs_storage.storeUsageData(domain, nodeInfo);
         bar.tick({
             current: counterCompleted + counterFailed,
             success: counterCompleted,
