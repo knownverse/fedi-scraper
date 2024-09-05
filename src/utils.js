@@ -21,6 +21,18 @@ return yargs
     type: 'number',
     demandOption: false,
   })
+  .option('outputPath', {
+    alias: 'o',
+    description: '# of parallel fetches',
+    type: 'string',
+    demandOption: false,
+  })
+  .option('md5Subfolders', {
+    alias: 'm',
+    description: '# of parallel fetches',
+    type: 'boolean',
+    demandOption: false,
+  })
   .help()
   .alias('help', 'h')
   .argv;
