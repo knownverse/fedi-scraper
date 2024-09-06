@@ -8,9 +8,35 @@ npm start -- --src https://nodes.fediverse.party/nodes.json --firstN 10 2> error
 npm start -- --src ./fedi-nodes.json 2> error.log
 ```
 
-Scraper will fetch nodeinfos into local `.fedi-nodes` folder 
+Scraper will fetch nodeinfos into local `.fedi-nodes` folder, see [example](https://github.com/knownverse/fedi-nodes/tree/main/nodes/00)
 
+```json
+{
+  "success": true,
+  "data": {
+    "version": "2.0",
+    "software": {
+      "name": "example",
+      "version": "0.19.3"
+    },
+    "protocols": null,
+    "usage": {
+      "users": {
+        "total": 1007,
+        "activeHalfyear": 19,
+        "activeMonth": 13
+      },
+      "localPosts": 962,
+      "localComments": 1490
+    },
+    "openRegistrations": true
+  },
+  "error": null
+}
 ```
+
+## error.log example
+```bash
 example.com: Error fetching url https://example.com/.well-known/nodeinfo: Error: getaddrinfo ENOTFOUND example.com. Stack: 
  TypeError: fetch failed
     at node:internal/deps/undici/undici:13178:13
