@@ -1,22 +1,22 @@
-const fs_storage = require('./fs-storage');
-const scraper = require('./scraper');
-const utils = require('./utils');
-const ProgressBar = require('progress');
+import {storeUsageData} from './fs-storage.js';
+import {fetchNodeInfos} from './scraper.js';
+import {getDomainsList, getArgs} from './utils.js';
+import ProgressBar from 'progress';
 
 main();
 
 async function main(){
-    const { src, firstN, concurrencyLimit, outputPath, md5Subfolder} = utils.getArgs();
-    const domains = await utils.getDomainsList(src, firstN);
+    const { src, firstN, concurrencyLimit, outputPath, md5Subfolder} = getArgs();
+    const domains = await getDomainsList(src, firstN);
 
     let counterCompleted = 0, counterFailed = 0;
     const bar = new ProgressBar('scraping [:bar] success: [:success] fail: [:fail] :percent :etas', { total: domains.length, stream: process.stdout });
 
-    for await (const {domain, nodeInfo} of scraper.fetchNodeInfos(domains, concurrencyLimit)) {
+    for await (const {domain, nodeInfo} of fetchNodeInfos(domains, concurrencyLimit)) {
         if (nodeInfo.success)
         {
             counterCompleted++;
-            fs_storage.storeUsageData({domain, wellKnownData: nodeInfo, folderPath: outputPath, md5Subfolder});
+            storeUsageData({domain, wellKnownData: nodeInfo, folderPath: outputPath, md5Subfolder});
         }
         else {
             console.error(`\n${domain}: ${nodeInfo.error}`);

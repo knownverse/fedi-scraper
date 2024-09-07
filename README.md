@@ -2,13 +2,15 @@
 
 Run to scrape: 
 
-```
+```zsh
 npm start -- --src <url/path> --firstN <number> 2> error.log
-npm start -- --src https://nodes.fediverse.party/nodes.json --firstN 10 2> error.log
+```
+Scraper will fetch nodeinfos into local folder, [example of fetch](https://github.com/knownverse/fedi-nodes/tree/main/nodes/00)
+
+```zsh
+npm start -- --src https://nodes.fediverse.party/nodes.json --firstN 10 -o output_folder 2> error.log
 npm start -- --src ./fedi-nodes.json 2> error.log
 ```
-
-Scraper will fetch nodeinfos into local `.fedi-nodes` folder, see [example](https://github.com/knownverse/fedi-nodes/tree/main/nodes/00)
 
 ```json
 {

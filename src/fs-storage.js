@@ -1,6 +1,6 @@
-const crypto = require('crypto');
-const path = require('path');
-const fs = require('fs-extra');
+import crypto from 'crypto';
+import path from 'path';
+import fs from 'fs-extra';
 
 
 async function storeUsageData({domain, wellKnownData, folderPath='.fedi-node', md5Subfolder=false}){
@@ -12,4 +12,4 @@ async function storeUsageData({domain, wellKnownData, folderPath='.fedi-node', m
     await fs.writeJson(filePath, wellKnownData, { spaces: 2 });
 }
 
-module.exports = {storeUsageData};
+export {storeUsageData};

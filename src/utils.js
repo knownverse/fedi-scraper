@@ -1,8 +1,9 @@
-const fs = require('fs');
-const yargs = require('yargs');
+import fs from 'fs';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers'
 
-function getArgs(){
-return yargs
+function getArgs() {
+return yargs(hideBin(process.argv))
   .option('src', {
     alias: 's',
     description: 'The URI to fetch data from',
@@ -43,7 +44,7 @@ async function getDomainsList(src, firstN){
     return firstN ? domains.slice(0, firstN) : domains;
 }
 
-module.exports = {getArgs, getDomainsList}
+export {getArgs, getDomainsList}
 
 function _readDomainsFromFile(filePath) {
     try {

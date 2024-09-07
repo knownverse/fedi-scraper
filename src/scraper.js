@@ -1,6 +1,6 @@
-const fedi_wk = require('fedi-well-known');
-const assert = require('assert');
-const pLimit = require('p-limit');
+import { WellKnowResult, fetchNodeInfo } from 'fedi-well-known';
+import assert from 'assert';
+import pLimit from 'p-limit';
 
 
 async function* fetchNodeInfos(domains, concurrencyLimit=100) {
@@ -10,11 +10,11 @@ async function* fetchNodeInfos(domains, concurrencyLimit=100) {
     const limit = pLimit(concurrencyLimit); // Set concurrency limit
     const tasks =  domains.map(domain => limit(async () => {
         try {
-            const nodeInfo = await fedi_wk.fetchNodeInfo(domain);
+            const nodeInfo = await fetchNodeInfo(domain);
             return { domain, nodeInfo };
         }
         catch (err) {
-            return { domain, nodeInfo: fedi_wk.WellKnowResult.Error(err) };
+            return { domain, nodeInfo: WellKnowResult.Error(err) };
 
         }
     }));
@@ -26,4 +26,4 @@ async function* fetchNodeInfos(domains, concurrencyLimit=100) {
     console.log('Scraping finished');
 }
 
-module.exports = {fetchNodeInfos}
+export {fetchNodeInfos}

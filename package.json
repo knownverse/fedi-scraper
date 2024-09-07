@@ -2,6 +2,7 @@
   "name": "fedi-scraper",
   "version": "0.1.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node src/index.js"
   },
@@ -10,9 +11,9 @@
   "description": "",
   "dependencies": {
     "crypto": "^1.0.1",
-    "fedi-well-known": "^0.1.0",
+    "fedi-well-known": "^0.2.0",
     "fs-extra": "^11.2.0",
-    "p-limit": "^3.1.0",
+    "p-limit": "^6.1.0",
     "progress": "^2.0.3",
     "yargs": "^17.7.2"
   }
